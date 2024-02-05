@@ -1,0 +1,68 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>noname.maven.extensions.devenv</groupId>
+  <artifactId>maven-devenv-bootstrap</artifactId>
+  <version>0.0.0-dev</version>
+  <packaging>pom</packaging>
+
+  <dependencyManagement>
+
+    <dependencies>
+
+      <dependency>
+	<groupId>noname.maven.extensions.devenv</groupId>
+	<artifactId>maven-devenv-bom</artifactId>
+	<version>0.0.0-dev</version>
+	<type>pom</type>
+	<scope>import</scope>
+      </dependency>
+
+    </dependencies>
+
+  </dependencyManagement>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>noname.maven.extensions.devenv</groupId>
+      <artifactId>maven-devenv-extension</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.commonjava.maven.ext</groupId>
+      <artifactId>pom-manipulation-ext</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.extensions</groupId>
+      <artifactId>maven-build-cache-extension</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>fr.brouillard.oss</groupId>
+      <artifactId>jgitver-maven-plugin</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.sviperll</groupId>
+      <artifactId>maven-profiledep-extension</artifactId>
+    </dependency>
+
+  </dependencies>
+
+  <repositories>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/${env.GITHUB_REPOSITORY}</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  
+</project>

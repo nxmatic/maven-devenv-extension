@@ -1,0 +1,83 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>noname.maven.extensions.devenv</groupId>
+  <artifactId>maven-devenv-bom</artifactId>
+  <packaging>pom</packaging>
+  <version>0.0.0-dev</version>
+
+  <description>Developmemt BOM</description>
+
+  <dependencyManagement>
+
+    <dependencies>
+
+      <dependency>
+	<groupId>noname.maven.extensions.devenv</groupId>
+	<artifactId>maven-devenv-parent</artifactId>
+	<version>0.0.0-dev</version>
+	<type>pom</type>
+	<scope>import</scope>
+      </dependency>
+
+      <dependency>
+	<groupId>org.commonjava.maven.ext</groupId>
+	<artifactId>pom-manipulation-parent</artifactId>
+	<version>0.0.0-dev</version>
+	<type>pom</type>
+	<scope>import</scope>
+      </dependency>
+
+      <dependency>
+	<groupId>org.apache.maven.extensions</groupId>
+	<artifactId>maven-build-cache-extension</artifactId>
+	<version>0.0.0-dev</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>fr.brouillard.oss</groupId>
+        <artifactId>jgitver-maven-plugin</artifactId>
+        <version>0.0.0-dev</version>
+      </dependency>
+
+      <dependency>
+        <groupId>fr.brouillard.oss</groupId>
+        <artifactId>jgitver</artifactId>
+        <version>0.0.0-dev</version>
+      </dependency>
+
+      <dependency>
+	<groupId>com.github.sviperll</groupId>
+	<artifactId>maven-profiledep-extension</artifactId>
+	<version>0.24-beta2</version>
+      </dependency>
+
+    </dependencies>
+
+  </dependencyManagement>
+
+  <build>
+
+    <pluginManagement>
+
+      <plugins>
+
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-enforcer-plugin</artifactId>
+	  <version>3.4.1</version>
+	  <configuration>
+            <rules>
+              <requirePluginVersions>
+                <banMavenDefaults>false</banMavenDefaults>
+              </requirePluginVersions>
+            </rules>
+          </configuration>
+	</plugin>
+
+      </plugins>
+
+    </pluginManagement>
+
+  </build>
+
+</project>

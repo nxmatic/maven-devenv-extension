@@ -1,0 +1,600 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>noname.maven.extensions.devenv</groupId>
+  <artifactId>maven-devenv-profiles</artifactId>
+  <version>0.0.0-dev</version>
+
+  <packaging>pom</packaging>
+  <description>Developmemt Profiles</description>
+  
+  <properties>
+    <jdk.version>21</jdk.version>
+  </properties>
+
+  <build>
+
+
+    <plugins>
+
+      <plugin>
+        <artifactId>maven-toolchains-plugin</artifactId>
+      </plugin>
+      
+    </plugins>
+
+  </build>
+
+  <profiles>
+    
+    <profile>
+      <id>toolchains</id>
+      <activation>
+	<property>
+	  <name>jdk.version</name>
+	</property>
+      </activation>
+      <build>
+	<pluginManagement>
+	  <plugins>
+	    <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-toolchains-plugin</artifactId>
+              <version>1.1</version>
+              <executions>
+		<execution>
+		  <phase>initialize</phase>
+		  <goals>
+		    <goal>toolchain</goal>
+		  </goals>
+		</execution>
+              </executions>
+              <configuration>
+		<toolchains>
+		  <jdk>
+		    <version>${jdk.version}</version>
+		  </jdk>
+		</toolchains>
+              </configuration>
+	    </plugin>
+	  </plugins>
+	</pluginManagement>
+	<plugins>
+	  <plugin>
+            <artifactId>maven-toolchains-plugin</artifactId>
+	  </plugin>
+	</plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- build using JDK 11 toolchain -->
+      <id>jdk11</id>
+      <properties>
+        <profile.provide>jdk-version</profile.provide>
+	<jdk.version>11</jdk.version>
+      </properties>
+      <build>
+	<plugins>
+	  <plugin>
+	    <artifactId>maven-compiler-plugin</artifactId>
+	    <configuration>
+	      <release>11</release>
+	    </configuration>
+	  </plugin>
+	</plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- build using JDK 11 toolchain -->
+      <id>jdk14</id>
+      <properties>
+        <profile.provide>jdk-version</profile.provide>
+	<jdk.version>14</jdk.version>
+      </properties>
+    </profile>
+    <profile>
+      <!-- build using JDK21 toolchain -->
+      <id>jdk17</id>
+      <properties>
+        <profile.provide>jdk-version</profile.provide>
+	<jdk.version>17</jdk.version>
+      </properties>
+    </profile>
+
+    <profile>
+      <!-- build using JDK21 toolchain -->
+      <id>jdk21</id>
+      <properties>
+        <profile.provide>jdk-version</profile.provide>
+	<jdk.version>21</jdk.version>
+      </properties>
+    </profile>
+
+    <profile>
+      <!-- allow maven core extensions injection in project -->
+      <id>maven-core-extensions</id>
+      <properties>
+        <profile.provides>core-extensions</profile.provides>
+	<profile.active>false</profile.active>
+      </properties>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>com.github.sviperll</groupId>
+              <artifactId>coreext-maven-plugin</artifactId>
+              <version>0.23</version>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>com.github.sviperll</groupId>
+            <artifactId>coreext-maven-plugin</artifactId>
+            <configuration>
+	      <extensions combine.children="append">
+		<extension>
+		  <groupId>org.apache.maven.extensions</groupId>
+		  <artifactId>maven-build-cache-extension</artifactId>
+		  <version>0.0.0-dev</version>
+		</extension>
+		<extension>
+		  <groupId>com.github.gzm55.maven</groupId>
+		  <artifactId>project-settings-extension</artifactId>
+		  <version>0.2.4</version>
+		</extension>
+		<extension>
+		  <groupId>fr.brouillard.oss</groupId>
+		  <artifactId>jgitver-maven-plugin</artifactId>
+		  <version>0.0.0-dev</version>
+		  <classLoadingStrategy>parent-first</classLoadingStrategy> <!-- self-first,parent-first,plugin -->
+		</extension>
+		<extension>
+		  <groupId>com.github.sviperll</groupId>
+		  <artifactId>maven-profiledep-extension</artifactId>
+		  <version>0.24-beta2</version>
+		</extension>
+		<extension>
+		  <groupId>com.github.shyiko.servers-maven-extension</groupId>
+		  <artifactId>servers-maven-extension</artifactId>
+		  <version>0.0.0-dev</version>
+		</extension>
+		<extension>
+		  <groupId>org.commonjava.maven.ext</groupId>
+		  <artifactId>pom-manipulation-ext</artifactId>
+		  <version>0.0.0-dev</version>
+		</extension>
+	      </extensions>
+            </configuration>
+	    <executions>
+              <execution>
+                <id>check-core-extensions</id>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- don't skip already cached builds -->
+      <id>maven-build-cache</id>
+      <properties>
+	<profile.provides>maven-build-cache</profile.provides>
+	<profile.active>true</profile.active>
+	<maven.build.cache.enabled>true</maven.build.cache.enabled>
+      </properties>
+    </profile>
+
+    <profile>
+      <!-- excluse jgitver from plugins version enforcer -->
+      <id>no-enforce-jgitver-plugin-version</id>
+      <properties>
+	<profile.provides>no-enforce-jgitver-plugin-version</profile.provides>
+	<profile.active>true</profile.active>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>enforce-plugin-versions</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requirePluginVersions>
+                    </requirePluginVersions>
+                    <!-- include other rules from the default configuration -->
+                  </rules>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- always dump effective pom model in target folders -->
+      <id>maven-effective-resources</id>
+      <properties>
+	<profile.provides>maven-effective-resources</profile.provides>
+      </properties>
+      <build>
+	<pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-help-plugin</artifactId>
+	      <version>3.3.0</version>
+	    </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>properties-maven-plugin</artifactId>
+	      <version>1.2.0</version>
+	    </plugin>
+            <plugin>
+	      <groupId>org.apache.maven.extensions</groupId>
+	      <artifactId>maven-build-cache-extension</artifactId>
+	      <version>1.0.1</version>
+	    </plugin>
+	  </plugins>
+	</pluginManagement>
+        <plugins>
+	  <plugin>
+	    <groupId>org.apache.maven.extensions</groupId>
+	    <artifactId>maven-build-cache-extension</artifactId>
+	    <configuration>
+	      <cache>
+		<executionControl>
+		  <runAlways>
+		    <plugins>
+		      <groupId>org.codehaus.mojo</groupId>
+		      <artifactId>properties-maven-plugin</artifactId>
+		    </plugins>
+		    <plugins>
+		      <groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-help-plugin</artifactId>
+		    </plugins>
+		  </runAlways>    
+		  <goalsLists>
+		    <goalsList artifactId="properties-maven-plugin">
+		      <goals>
+			<goal>write-project-properties</goal>
+		      </goals>
+		    </goalsList>
+		    <goalsList artifactId="maven-help-plugin">
+		      <goals>
+			<goal>effective-settings</goal>
+			<goal>effective-pom</goal>
+		      </goals>
+		    </goalsList>
+		  </goalsLists>
+		</executionControl>
+	      </cache>
+	    </configuration>
+	  </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-help-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>dump-effective-pom</id>
+                <goals>
+                  <goal>effective-pom</goal>
+                </goals>
+                <phase>validate</phase>
+                <configuration>
+		  <verbose>true</verbose>
+                  <output>${project.build.directory}/maven-pom.xml</output>
+                </configuration>
+              </execution>
+              <execution>
+                <id>dump-effective-settings</id>
+                <goals>
+                  <goal>effective-settings</goal>
+                </goals>
+                <phase>validate</phase>
+                <configuration>
+                  <output>${project.build.directory}/maven-settings.xml</output>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+	  <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>properties-maven-plugin</artifactId>
+            <executions>
+              <execution>
+		<phase>validate</phase>
+		<goals>
+		  <goal>write-project-properties</goal>
+		</goals>
+		<configuration>
+		  <outputFile>
+                    ${project.build.directory}/maven-project.properties
+		  </outputFile>
+		</configuration>
+              </execution>
+            </executions>
+	  </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- configure maven environment in eclipse,netbeans,vscode running m2e -->
+      <id>m2e</id>
+      <activation>
+        <property>
+          <name>m2e.version</name>
+        </property>
+      </activation>
+      <properties>
+	<profile.provides>m2e</profile.provides>
+        <profile.depends>m2e-build-target,m2e-checkstyles-resources,m2e-skip-nodejs-builds</profile.depends>
+      </properties>
+    </profile>
+
+    <profile>
+      <!-- separate m2e build in a dedicated folder -->
+      <id>m2e-build-target</id>
+      <build>
+        <directory>bin</directory>
+      </build>
+      <properties>
+        <profile.provides>m2e-build-target</profile.provides>
+      </properties>
+    </profile>
+
+    <profile>
+      <!-- m2e auto-value annotation processing for eclipse,vscode -->
+      <id>m2e-auto-value-apt</id>
+      <activation>
+	<property>
+	  <name>auto-value.version</name>
+	</property>
+      </activation>
+      <properties>
+        <profile.provides>m2e-auto-value</profile.provides>
+        <profile.depends>m2e</profile.depends>
+
+        <addCompileSourceRoots default="true" />
+        <appendSourceArtifacts default-value="true" />
+        <generatedSources>${project.build.directory}/generated-sources/auto-value</generatedSources>
+        <maven-processor-plugin.version>5.0-rc3</maven-processor-plugin.version>
+      </properties>
+      <build>
+	<pluginManagement>
+	  <plugins>
+            <plugin>
+              <groupId>org.bsc.maven</groupId>
+              <artifactId>maven-processor-plugin</artifactId>
+	      <version>${maven-processor-plugin.version}</version>
+              <dependencies>
+		<dependency>
+                  <groupId>com.google.auto.value</groupId>
+                  <artifactId>auto-value</artifactId>
+		  <version>${auto-value.version}</version>
+		</dependency>
+              </dependencies>
+	    </plugin>
+	  </plugins>
+	</pluginManagement>
+	<plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <!-- Need to disable default annotation processing since apt-maven-plugin takes over -->
+              <compilerArgument>
+                -proc:none
+              </compilerArgument>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.bsc.maven</groupId>
+            <artifactId>maven-processor-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>process</goal>
+                </goals>
+                <configuration>
+                  <addCompileSourceRoots default-value="true" />
+                  <appendSourceArtifacts default-value="true" />
+                  <defaultOutputDirectory default-value="${generatedSources}" />
+                  <processors>
+                    <processor>com.google.auto.value.processor.AutoValueProcessor</processor>
+                  </processors>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <!-- Need to ensure the generated source folder is added to the project classpath,
+                     in jdt.ls -->
+                <id>add-source</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>add-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>${generatedSources}</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- enable running checkstyle in IDE -->
+      <id>m2e-checkstyle-resources</id>
+      <properties>
+        <profile.provides>m2e-checkstyle-resources</profile.provides>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>unpack-checkstyle-rules</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>unpack</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>com.nuxeo.nos</groupId>
+                      <artifactId>nos-qa-tools</artifactId>
+                      <version>${nos-qa-tools.version}</version>
+                      <outputDirectory>${project.build.directory}</outputDirectory>
+                      <includes>checkstyle/*.xml</includes>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- disable nodejs if running m2e -->
+      <id>m2e-skip-nodejs-builds</id>
+      <properties>
+        <profile.provides>m2e-skip-nodejs-builds</profile.provides>
+	<skipNodeJsBuilds>true</skipNodeJsBuilds>
+      </properties>
+    </profile>      
+
+    <profile>
+      <id>spotless</id>
+      <properties>
+        <profile.provides>spotless</profile.provides>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+            <version>${spotless.version}</version>
+            <configuration>
+              <java>
+		<eclipse>
+		  <!--version>4.26</version-->                     <!-- optional version of Eclipse Formatter -->
+		  <file>${project.basedir}/devel/eclipse-formatter.xml</file> <!-- optional -->
+		</eclipse>
+              </java>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    
+    <profile>
+      <id>github-repository</id>
+      <activation>
+	<property>
+	  <name>env.GITHUB_REPOSITORY</name>
+	</property>
+      </activation>
+      <properties>
+        <profile.provides>github-repository</profile.provides>
+      </properties>
+      <repositories>
+	<repository>
+	  <id>github</id>
+	  <url>https://maven.pkg.github.com/${env.GITHUB_REPOSITORY}</url>
+	  <releases>
+            <enabled>true</enabled>
+	  </releases>
+	  <snapshots>
+            <enabled>false</enabled>
+	  </snapshots>
+	</repository>
+      </repositories>
+      <distributionManagement>
+	<repository>
+          <id>github</id>
+          <name>GitHub Packages</name>
+          <url>https://maven.pkg.github.com/${env.GITHUB_REPOSITORY}</url>
+        </repository>
+      </distributionManagement>
+    </profile>
+
+    <profile>
+      <id>github-repository-upstream</id>
+      <activation>
+	<property>
+	  <name>env.GITHUB_REPOSITORY_UPSTREAM</name>
+	</property>
+      </activation>
+      <properties>
+        <profile.provides>github-repository-upstream</profile.provides>
+        <profile.requires>github-repository</profile.requires>
+      </properties>
+      <repositories>
+	<repository>
+	  <id>github-upstream</id>
+	  <url>https://maven.pkg.github.com/${env.GITHUB_REPOSITORY_UPSTREAM}</url>
+	  <releases>
+            <enabled>true</enabled>
+	  </releases>
+	  <snapshots>
+            <enabled>false</enabled>
+	  </snapshots>
+	</repository>
+      </repositories>
+    </profile>
+
+    <profile>
+      <id>no-maven-deployment</id>
+      <properties>
+        <profile.provides>maven-deployment</profile.provides>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-deploy</id>
+                <goals>
+                  <goal>deploy</goal>
+                </goals>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    
+
+  </profiles>
+
+</project>

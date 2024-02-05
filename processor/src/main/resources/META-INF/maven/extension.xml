@@ -1,0 +1,5 @@
+<extension>
+  <exportedPackages>
+   <exportedPackage>noname.maven.devenv.spi.plexus</exportedPackage>
+ </exportedPackages>
+</extension>

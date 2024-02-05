@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<configuration
+	xmlns="http://ch.qos.logback/xml/ns/logback"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd"
+	debug="true" >
+
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		    <resetJUL>true</resetJUL>
+	</contextListener>
+				
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+		<encoder>
+			<pattern>[%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="debug">
+		<appender-ref ref="FILE" />
+	</root>
+
+
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT" />
+	</root>
+
+	<logger name="org.eclipse" level="TRACE" />
+	<logger name="org.apache" level="TRACE" />
+	<logger name="com.google.inject" level="TRACE" />
+	<logger name="httpclient.wire" level="WARN" />
+	<logger name="com.jayway.jsonpath.internal.JsonContext" level="WARN" />
+	<logger name="org.commonjava.util.jhttpc" level="WARN" />
+	<logger name="org.commonjava.maven.galley" level="WARN" />
+</configuration>
